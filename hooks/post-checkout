@@ -49,7 +49,7 @@ elif [[ "${ALLOW_FORKS}" == "true" ]]; then
     fi
 else
     die "Unknown value for allow_forks: '${ALLOW_FORKS}'.  Must be 'true' or 'false'"
-if 
+fi
 
 if [[ "${FOREIGN}" == "true" ]]; then
     echo "--- Cloning downstream repository ${REPO_URL}"
