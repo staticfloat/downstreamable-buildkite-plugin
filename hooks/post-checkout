@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Normalize `$BUILDKITE_REPO` value.  It can take two forms:
+#   - git@github.com:organization/repo.git
+#   - https://github.com/organization/repo.git
+# In both cases, we want to return just `organization/repo`
+function buildkite_repo_normalize()
+{
+    REPO="${1}"
+    # Remove initial schema, `git@` and `github.com` if it exists
+    REPO="${REPO#https://*}"
+    REPO="${REPO#ssh://*}"
+    REPO="${REPO#git@*}"
+    REPO="${REPO#github.com}"
+
+    # Remove first `:` or `/`:
+    REPO="${REPO#/*}"
+    REPO="${REPO#:*}"
+
+    # Remove trailing `.git` if it exists:
+    REPO="${REPO%*.git}"
+    echo -n "${REPO}"
+}
+
+function die() {
+    echo "ERROR: ${1}" >&2
+    if [[ ! -z $(which buildkite-agent 2>/dev/null) ]]; then
+        buildkite-agent annotate --style=error "[downstreamable] ${1}"
+    fi
+    exit 1
+}
+
+REPO_URL="$(buildkite_repo_normalize "${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL}")"
+ALLOW_FORKS="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_ALLOW_FORKS:-false}"
+CHECKOUT_DIR="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_CHECKOUT:-"./$(basename "$(REPO_URL)")"}"
+
+FOREIGN="true"
+if [[ "${ALLOW_FORKS}" == "false" ]]; then
+    if [[ "${REPO_URL}" == "$(buildkite_repo_normalize "${BUILDKITE_REPO}")" ]]; then
+        FOREIGN="false"
+    fi
+elif [[ "${ALLOW_FORKS}" == "true" ]]; then
+    # Use basename to drop organization name and just compare repository name
+    if [[ "$(basename ${REPO_URL})" == "$(basename "$(buildkite_repo_normalize "${BUILDKITE_REPO}")")" ]]; then
+        FOREIGN="false"
+    fi
+else
+    die "Unknown value for allow_forks: '${ALLOW_FORKS}'.  Must be 'true' or 'false'"
+if 
+
+if [[ "${FOREIGN}" == "true" ]]; then
+    echo "--- Cloning downstream repository ${REPO_URL}"
+    git clone "${REPO_URL}" "${CHECKOUT_DIR}"
+    cd "${CHECKOUT_DIR}"
+fi

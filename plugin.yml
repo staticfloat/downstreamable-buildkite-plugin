@@ -1,0 +1,24 @@
+name: Downstreamable
+description: Easily add downstream tests
+author: https://github.com/staticfloat
+configuration:
+  properties:
+    # Canonical repository this pipeline lives at; if the current pipeline
+    # is not running on that repository, it will clone this repo and `cd`
+    # into it as part of the `post-checkout` phase.
+    repo_url:
+      type: string
+
+    # `allow_forks` changes the criteria from "must be exactly `repo_url`"
+    # to `basename must match the basename of `repo_url`".  This allows
+    # forks of a package to bypass this check.
+    # Default: "false"
+    allow_forks:
+      type: bool
+
+    # The path we should check out the `repo_url` to.
+    # Default: "./$(basename "$(repo_url)")"
+    checkout_dir:
+      type: string
+
+  additionalProperties: false
