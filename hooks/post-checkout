@@ -34,7 +34,8 @@ function die() {
 
 REPO_URL="$(buildkite_repo_normalize "${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL}")"
 ALLOW_FORKS="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_ALLOW_FORKS:-false}"
-CHECKOUT_DIR="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_CHECKOUT:-"./$(basename "$(REPO_URL)")"}"
+CHECKOUT_DIR="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_DIR:-"./$(basename "$(REPO_URL)")"}"
+CHECKOUT_REF="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_CHECKOUT:-""}"
 
 FOREIGN="true"
 if [[ "${ALLOW_FORKS}" == "false" ]]; then
@@ -54,4 +55,8 @@ if [[ "${FOREIGN}" == "true" ]]; then
     echo "--- Cloning downstream repository ${REPO_URL}"
     git clone "${REPO_URL}" "${CHECKOUT_DIR}"
     cd "${CHECKOUT_DIR}"
+
+    if [[ -n "${CHECKOUT_REF}" ]]; then
+        git checkout "${CHECKOUT_RET}"
+    fi
 fi

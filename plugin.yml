@@ -18,7 +18,13 @@ configuration:
 
     # The path we should check out the `repo_url` to.
     # Default: "./$(basename "$(repo_url)")"
-    checkout_dir:
+    dir:
+      type: string
+
+    # The ref that we should check out after cloning.  If empty, remains
+    # at the default branch, whatever is specified by repository.
+    # Default: ""
+    checkout:
       type: string
 
   additionalProperties: false
