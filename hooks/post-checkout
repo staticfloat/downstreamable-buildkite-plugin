@@ -59,4 +59,6 @@ if [[ "${FOREIGN}" == "true" ]]; then
     if [[ -n "${CHECKOUT_REF}" ]]; then
         git checkout "${CHECKOUT_RET}"
     fi
+else
+    echo "Nothing to do, ${REPO_URL} matched"
 fi
