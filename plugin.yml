@@ -24,7 +24,7 @@ configuration:
     # The ref that we should check out after cloning.  If empty, remains
     # at the default branch, whatever is specified by repository.
     # Default: ""
-    checkout:
+    branch:
       type: string
 
   additionalProperties: false
