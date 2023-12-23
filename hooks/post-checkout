@@ -52,7 +52,7 @@ else
 fi
 
 if [[ "${FOREIGN}" == "true" ]]; then
-    echo "--- Cloning downstream repository ${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL}"
+    echo "Cloning downstream repository ${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL}"
     git clone "${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL}" "${CHECKOUT_DIR}"
     cd "${CHECKOUT_DIR}"
 
