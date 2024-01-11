@@ -36,7 +36,6 @@ REPO_URL="$(buildkite_repo_normalize "${BUILDKITE_PLUGIN_DOWNSTREAMABLE_REPO_URL
 ALLOW_FORKS="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_ALLOW_FORKS:-false}"
 CHECKOUT_DIR="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_DIR:-"./$(basename "${REPO_URL}")"}"
 CHECKOUT_REF="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_BRANCH:-""}"
-RUN_HOOKS="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_RUN_HOOKS:-true}"
 
 FOREIGN="true"
 if [[ "${ALLOW_FORKS}" == "false" ]]; then
@@ -60,13 +59,9 @@ if [[ "${FOREIGN}" == "true" ]]; then
     if [[ -n "${CHECKOUT_REF}" ]]; then
         git checkout "${CHECKOUT_RET}"
     fi
-
-    # Look to see if there's a `downstreamable.hook` in the top-level repository's `.buildkite` directory.
-    # If there is, run that, it may do things like alter the current checkout a bit.
-    if [[ "${RUN_HOOKS}" == "true" ]] && [[ -f "${BUILDKITE_BUILD_CHECKOUT_PATH}/.buildkite/downstreamable.hook" ]]; then
-        echo "--- downstreamable.hook"
-        source "${BUILDKITE_BUILD_CHECKOUT_PATH}/.buildkite/downstreamable.hook"
-    fi
 else
     echo "Nothing to do, ${REPO_URL} matched"
 fi
+
+# Pass this to our `pre-command` hook
+export BUILDKITE_PLUGIN_DOWNSTREAMABLE_FOREIGN="${FOREIGN}"

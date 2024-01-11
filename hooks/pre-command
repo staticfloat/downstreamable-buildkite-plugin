@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -euo pipefail
+
+RUN_HOOKS="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_RUN_HOOKS:-true}"
+FOREIGN="${BUILDKITE_PLUGIN_DOWNSTREAMABLE_FOREIGN}"
+
+# Look to see if there's a `downstreamable.hook` in the top-level repository's `.buildkite` directory.
+# If there is, run that, it may do things like alter the current checkout a bit.
+if [[ "${FOREIGN}" == "true" ]] && [[ "${RUN_HOOKS}" == "true" ]] && [[ -f "${BUILDKITE_BUILD_CHECKOUT_PATH}/.buildkite/downstreamable.hook" ]]; then
+    echo "--- downstreamable.hook"
+    source "${BUILDKITE_BUILD_CHECKOUT_PATH}/.buildkite/downstreamable.hook"
+fi
+
