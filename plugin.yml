@@ -27,4 +27,9 @@ configuration:
     branch:
       type: string
 
+    # Whether this plugin instance should search for hooks in the upstream repo
+    # Default: "true"
+    run_hooks:
+      type: bool
+
   additionalProperties: false
